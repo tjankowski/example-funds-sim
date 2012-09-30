@@ -1,0 +1,165 @@
+/* 
+    Document   : main
+    Created on : 2010-02-20, 11:41:02
+    Author     : Tomasz Jankowski
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+body {
+    width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    background: #DA0027;
+    color: white;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.hide {
+    display: none;
+}
+
+.bottom_line {
+    border-bottom: white 1px solid;
+}
+
+.padding_10 {
+    padding: 10px;
+}
+
+.margin_10 {
+    margin: 10px;
+}
+
+.width_50 {
+    width: 50px;
+}
+
+.marging_bottom_10 {
+    margin-bottom: 10px;
+}
+
+.center_text {
+    text-align: center;
+}
+
+.errormessage {
+    color:red;
+    text-align: center;
+}
+
+.navigation {
+    float: right;
+    display: inline;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px;
+}
+
+.navigation a {
+    background: white;
+    padding: 20px 20px 10px 20px;
+    color: #DA0027;
+    border: white solid 1px;
+}
+
+.navigation a:hover{
+    color: white;
+    background: #DA0027;
+}
+
+.header {
+    margin: 0 0 10px 0;
+    height: 80px;
+    background: no-repeat center left url("logo.png") #DA0027;
+    overflow: hidden;
+    border-bottom: 1px white solid;
+}
+
+.content {
+    padding: 10px;
+}
+
+.login_form {
+    color: #DA0027;
+    width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-color: white;
+    padding: 0 10px 10px 10px;
+}
+
+.tcolor {
+	color: #DA0027;
+}
+
+.login_form h1 {
+    background: white;
+    color: #DA0027;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    border-bottom: 5px solid #DA0027;
+}
+
+.login_form .textfield {
+    width: 180px;
+}
+
+.login_form .errormessage {
+    color: black;
+    text-align: center;
+    display: block;
+    font-size: larger;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.fund_units_form {
+    color: #DA0027;
+    width: 350px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-color: white;
+    padding: 0 10px 10px 10px;
+}
+
+.fund_units_form h1 {
+    background: white;
+    color: #DA0027;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    border-bottom: 5px solid #DA0027;
+}
+
+.fund_units_form .textfield {
+    width: 150px;
+}
+
+.fund_units_form .errormessage {
+    color: black;
+    text-align: center;
+    display: block;
+    font-size: larger;
+    font-weight: bold;
+    padding: 5px;
+}
+

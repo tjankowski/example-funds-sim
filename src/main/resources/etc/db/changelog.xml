@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet id="application.schema" author="Tomasz Jankowski">
+		<sql><![CDATA[
+			CREATE TABLE Users (
+			    id SERIAL,
+			    username VARCHAR(50) NOT NULL,
+			    password VARCHAR(50) NOT NULL,
+			    wallet_file_path VARCHAR(255),
+			    enabled boolean NOT NULL,
+			    authority VARCHAR(50) NOT NULL,
+			    PRIMARY KEY(id)
+			);
+			
+			CREATE TABLE fund (
+			  dtype character varying(31) NOT NULL,
+			  id bigint NOT NULL,
+			  fund_type character varying(255),
+			  fund_value numeric(19,2),
+			  PRIMARY KEY (id)
+			);
+		]]></sql>
+	</changeSet>
+	
+	<changeSet id="insert.funds.data" author="Tomasz Jankowski">
+		<sql><![CDATA[
+			INSERT INTO fund (dtype, id, fund_type, fund_value) VALUES ('SharesFund', 1, 'SharesFund', 100.00);
+			INSERT INTO fund (dtype, id, fund_type, fund_value) VALUES ('StableGrowthFund', 2, 'StableGrowthFund', 100.00);
+			INSERT INTO fund (dtype, id, fund_type, fund_value) VALUES ('BalancedFund', 3, 'BalancedFund', 100.00);
+			INSERT INTO fund (dtype, id, fund_type, fund_value) VALUES ('BondFund', 4, 'BondFund', 100.00);
+			INSERT INTO fund (dtype, id, fund_type, fund_value) VALUES ('MoneyMarketFund', 5, 'MoneyMarketFund', 100.00);
+		]]></sql>
+	</changeSet>
+
+</databaseChangeLog>

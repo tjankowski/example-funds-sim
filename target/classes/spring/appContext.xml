@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/jdbc.properties</value>
+                <value>classpath:/file.properties</value>
+                <value>classpath:/liquibase.properties</value>
+                <value>classpath:/log4j.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="moneyTransactionManager" class="model.service.SimpleTransactionManager">
+        <property name="fundUnitService" ref="fundUnitService" />
+        <property name="walletService" ref="walletService" />
+    </bean>
+
+    <!-- Użytkownicy -->
+
+    <bean id="usersManager" class="model.service.SimpleUsersManager">
+    	<property name="walletService" ref="walletService" />
+        <property name="usersDao" ref="usersDao" />
+    </bean>
+
+    <bean id="usersDao" class="model.service.dao.hibernate.HibernateUsersDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="userValidator" class="controller.support.UserValidator">
+    	<property name="usersManager" ref="usersManager"/>
+    </bean>
+
+    <!-- Portfel -->
+    <bean id="walletXmlDao" class="model.service.dao.xml.XmlWalletDAO">
+    	<property name="xStream" ref="xStream" />
+    	<property name="walletFilePath">
+        	<value>${wallet.path}</value>
+        </property>
+    </bean>
+    
+    <bean id="walletService" class="model.service.SimpleWalletService">
+        <property name="walletDAO" ref="walletXmlDao" />
+    </bean>
+
+    <!-- Fundusze -->
+    <bean id="fundService" class="model.service.fund.SimpleFundService">
+        <property name="fundDAO" ref="fundDao"/>
+    </bean>
+
+    <bean id="fundUnitService" class="model.service.fund.SimpleFundUnitService">
+    </bean>
+
+    <bean id="valuationService" class="model.service.fund.valuation.SimpleValuationService">
+        <property name="fundService" ref="fundService"/>
+    </bean>
+
+    <bean id="fundDao" class="model.service.dao.hibernate.HibernateFundDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="fundsEvaluate" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="valuationService" />
+        <property name="targetMethod" value="evaluateFunds" />
+    </bean>
+
+    <bean id="fundsEvaluateTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="fundsEvaluate" />
+        <!-- 10 seconds -->
+        <property name="startDelay" value="10000" />
+        <!-- repeat every 10 seconds -->
+        <property name="repeatInterval" value="10000" />
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="fundsEvaluateTrigger" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="xStream" class="com.thoughtworks.xstream.XStream"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>org.postgresql.Driver</value>
+        </property>
+        <property name="url">
+            <value>jdbc:postgresql://localhost:5432/eurobank</value>
+        </property>
+        <property name="username">
+            <value>postgres</value>
+        </property>
+        <property name="password">
+            <value>tj86</value>
+        </property>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="annotatedClasses">
+         <list>
+			<value>model.domain.User</value>
+			<value>model.domain.fund.Fund</value>
+			<value>model.domain.fund.BalancedFund</value>
+			<value>model.domain.fund.BondFund</value>
+			<value>model.domain.fund.MoneyMarketFund</value>
+			<value>model.domain.fund.SharesFund</value>
+			<value>model.domain.fund.StableGrowthFund</value>
+         </list>
+       </property>
+        <property name="mappingResources">
+            <list>
+                <value>queries.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>-->
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop>-->
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>-->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.max_fetch_depth">3</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<!--
+  - Named Queries for the Hibernate
+  -->
+
+<hibernate-mapping auto-import="true" package="domain">
+
+    <query name="allUsers">
+        <![CDATA[
+            from User u
+            order by u.userName
+        ]]>
+    </query>
+
+    <query name="getUserByUserName">
+        <![CDATA[
+            from User u
+            where u.userName like :userName
+        ]]>
+    </query>
+
+    <query name="allFunds">
+        <![CDATA[
+            from Fund f
+        ]]>
+    </query>
+
+</hibernate-mapping>
